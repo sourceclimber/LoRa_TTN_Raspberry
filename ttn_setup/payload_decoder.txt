@@ -1,0 +1,38 @@
+function bin2string(array){
+	var result = "";
+	for(var i = 0; i < array.length; ++i){
+		result+= (String.fromCharCode(array[i]));
+	}
+	return result;
+}
+
+function Decoder(bytes, port) {
+  // Decode an uplink message from a buffer
+  // (array) of bytes to an object of fields.
+  var decoded = {};
+
+  //message format: 19#0#21.13669036049731
+
+  var payloadString = bin2string(bytes);
+  var data = payloadString.split("#")
+
+  if(payloadString.indexOf("#") === -1)
+  {
+    decoded.rawPayload = payloadString;
+  }
+  else
+  {
+    decoded.tmp = 0;
+    decoded.hum = 0;
+    decoded.rain = 0;
+
+    if(data.length >= 1)
+      decoded.hum = data[0];
+    if(data.length >= 2)
+      decoded.rain = data[1];
+    if(data.length >= 3)
+      decoded.tmp = data[2];
+  }
+
+  return decoded;
+}
